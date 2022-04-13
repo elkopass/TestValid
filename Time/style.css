@@ -1,0 +1,23 @@
+* {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+html, body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+p {
+    margin-top: 10px
+}
+
+#btn_save {
+    margin-top: 10px;
+}
+
+.output_template {
+    display: none
+}
