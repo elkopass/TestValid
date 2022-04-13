@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 	. "github.com/onsi/gomega"
 	"math/rand"
 )
@@ -69,7 +71,51 @@ func ValidBraces(braces string) bool {
 	return false
 }
 
-func main() {
-	fmt.Println(ValidBraces("()"))
+type Request struct {
+	ID     int    `db:"id"`
+	Value  string `db:"value"`
+	Answer string `db:"answer"`
+}
 
+var schema string = "CREATE TABLE `requests` (	" +
+	"  	`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY," +
+	"		  	`value` varchar(255) NOT NULL," +
+	"           `answer` varchar(255) NOT NULL	)"
+
+func main() {
+	//fmt.Println(ValidBraces("()"))
+	insertToBD("()", ValidBraces("()"))
+}
+
+func insertToBD(val string, ans bool) {
+	conn, err := sqlx.Connect("mysql", "Actor_For_Hits_Back:iu3nYfCE27SKAET@/db_for_test")
+	if err != nil {
+		panic(err)
+	}
+	//conn.MustExec(schema)
+	stmt := `INSERT INTO requests (value, answer) VALUES(?,?)`
+	res, err := conn.Exec(stmt, val, ans)
+	if err != nil {
+		panic(err)
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Created request with id:%d", id)
+
+	var request Request
+	err = conn.Get(&request, "select * from requests where id=?", id)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(request)
+	//_, err = conn.Exec("UPDATE requests set value=\"John\" where id=?", id)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//_, err = conn.Exec("DELETE FROM requests where id=?", id)
+	//if err != nil {
+	//	panic(err)
+	//}
 }
