@@ -13,7 +13,6 @@ import (
 	"github.com/Hendra-Huang/databaseintegrationtest/testingutil" // helper function for testing
 )
 
-// list of regexp pattern for adding schema to the query
 var schemaPrefixRegexps = [...]*regexp.Regexp{
 	regexp.MustCompile(`(?i)(^CREATE SEQUENCE\s)(["\w]+)(.*)`),
 	regexp.MustCompile(`(?i)(^CREATE TABLE\s)(["\w]+)(\s.+)`),
@@ -25,7 +24,6 @@ var schemaPrefixRegexps = [...]*regexp.Regexp{
 	regexp.MustCompile(`(?i)(\sJOIN\s)(["\w]+)(.*)`),
 }
 
-// adding schema before the table name
 func addSchemaPrefix(schemaName, query string) string {
 	prefixedQuery := query
 	for _, re := range schemaPrefixRegexps {

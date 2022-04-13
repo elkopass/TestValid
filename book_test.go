@@ -17,11 +17,11 @@ func TestInsertBook(t *testing.T) {
 	defer cleanup()
 
 	loadTestData(t, testDb, schemaName, "book")
-	insertBookQuery = addSchemaPrefix(schemaName, insertBookQuery) // override the query and add schema to the query
+	insertBookQuery = addSchemaPrefix(schemaName, insertBookQuery)
 
 	title := "New title"
 	author := "New author"
-	err := InsertBook(context.Background(), testDb, title, author) // will execute insertBookQuery
+	err := InsertBook(context.Background(), testDb, title, author)
 	testingutil.Ok(t, err)
 }
 
@@ -31,9 +31,9 @@ func TestGetBooks(t *testing.T) {
 	defer cleanup()
 
 	loadTestData(t, testDb, schemaName, "book")
-	getBooksQuery = addSchemaPrefix(schemaName, getBooksQuery) // override the query and add schema to the query
+	getBooksQuery = addSchemaPrefix(schemaName, getBooksQuery)
 
-	books, err := GetBooks(context.Background(), testDb) // will execute getBooksQuery
+	books, err := GetBooks(context.Background(), testDb)
 	testingutil.Ok(t, err)
 	testingutil.Equals(t, 2, len(books))
 }
