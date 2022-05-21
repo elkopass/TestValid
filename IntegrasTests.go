@@ -1,4 +1,4 @@
-package database
+package main
 
 import (
 	"fmt"
@@ -27,15 +27,15 @@ func CreateTestDatabase(t *testing.T) (*sql.DB, string, func()) {
 	}
 
 	rand.Seed(time.Now().UnixNano())
-	schemaName := "test" + strconv.FormatInt(rand.Int63(), 10)
+	tableName := "TestDataBase" + strconv.FormatInt(rand.Int63(), 10)
 
-	_, err := db.Exec("CREATE SCHEMA " + schemaName)
+	_, err := db.Exec("CREATE SCHEMA " + tableName)
 	if err != nil {
 		t.Fatalf("Fail to create schema. %s", err.Error())
 	}
 
-	return db, schemaName, func() {
-		_, err := db.Exec("DROP SCHEMA " + schemaName + " CASCADE")
+	return db, tableName, func() {
+		_, err := db.Exec("DROP SCHEMA " + tableName + " CASCADE")
 		if err != nil {
 			t.Fatalf("Fail to drop database. %s", err.Error())
 		}

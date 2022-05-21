@@ -3,38 +3,40 @@ package main
 import (
 	"context"
 	"database/sql"
+	"testing"
 )
 
-type Book struct {
-	Title  string
-	Author string
+type Requests struct {
+	Braces string
+	Result string
 }
 
-var getBooksQuery = `SELECT * FROM book`
-var insertBookQuery = `INSERT INTO book VALUES ($1, $2)`
+var getRequestsQuery = `SELECT * FROM requests`
+var insertRequestQuery = `INSERT INTO requests VALUES ($1, $2)`
 
-func GetBooks(ctx context.Context, db *sql.DB) ([]Book, error) {
-	rows, err := db.QueryContext(ctx, getBooksQuery)
+func GetRequests(ctx context.Context, db *sql.DB) ([]Requests, error) {
+	rows, err := db.QueryContext(ctx, getRequestsQuery)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	books := []Book{}
+	requestss := []Requests{}
 	for rows.Next() {
-		book := Book{}
-		err := rows.Scan(&book.Title, &book.Author)
+		requests := Requests{}
+		err := rows.Scan(&requests.Braces, &requests.Result)
 		if err != nil {
-			return books, err
+			return requestss, err
 		}
-		books = append(books, book)
+		requestss = append(requestss, requests)
 	}
 
-	return books, nil
+	return requestss, nil
 }
 
-func InsertBook(ctx context.Context, db *sql.DB, title, author string) error {
-	_, err := db.ExecContext(ctx, insertBookQuery, title, author)
-
-	return err
+func debugTest(ctx context.Context, db *sql.DB, t *testing.T) {
+	_, err := GetRequests(ctx, db)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
 }
